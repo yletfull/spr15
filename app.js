@@ -1,12 +1,15 @@
 const express = require('express');
-const http = require('http');
-const path = require('path');
+// const http = require('http');
+// const path = require('path');
+
 const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
+const routes = require('./routes.js');
 
-app.use(express.static(__dirname + '/public'));g
+app.use(express.static(`${__dirname}/public`));
+app.use('', routes);
 
-app.listen(PORT, () => {
-  console.log('Ссылка на сервер:');
-  console.log(BASE_PATH);
+const server = app.listen(PORT, () => {
+
 });
+// server.close();
