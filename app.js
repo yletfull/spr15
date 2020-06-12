@@ -1,16 +1,14 @@
-/* eslint-disable eol-last */
 const express = require('express');
+const path = require('path');
+const routes = require(path.join(__dirname,'./routes/routes'));
 
-// eslint-disable-next-line no-unused-vars
-const { PORT = 3000, BASE_PATH } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
-const routes = require('./routes/routes');
-const { error, timeLog } = require('./routes/helpers');
+const { error, timeLog } = require(path.join(__dirname, "/routes/helpers.js"));
 
 app.use(express.static(`${__dirname}/public`));
 app.use('', timeLog);
 app.use('', routes);
 app.use('', error);
 
-// eslint-disable-next-line no-unused-vars
 const server = app.listen(PORT, () => {});

@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
-const  users  = require('../data/users');
-const  cards  = require('../data/cards');
+const path = require('path');
 
+const users = require(path.join(__dirname, '../data/users'));
+const cards = require(path.join(__dirname, '../data/cards'));
 const getUsersList = (req, res) => {
   res.send(users);
 };
