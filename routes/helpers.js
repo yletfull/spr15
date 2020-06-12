@@ -10,7 +10,7 @@ const getUsersList = (req, res) => {
 const getUser = (req, res) => {
   const currentUser = users.filter((user) => user._id === req.params.id);
   console.log(currentUser);
-  if (currentUser == '') { res.send({ error: 'Такого пользователя нет' }); }
+  if (currentUser == '') { res.send({ error: 'Нет пользователя с таким id' }); }
   res.send((currentUser));
 };
 
