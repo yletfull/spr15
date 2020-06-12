@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
-const { users } = require('../data/users');
-const { cards } = require('../data/cards');
+const  users  = require('../data/users');
+const  cards  = require('../data/cards');
 
 const getUsersList = (req, res) => {
   res.send(users);

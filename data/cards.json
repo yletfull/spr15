@@ -1,4 +1,4 @@
-module.exports.cards = [
+[
   {
       "likes": [
           {
@@ -168,7 +168,7 @@ module.exports.cards = [
               "about": "Designer, engineer",
               "avatar": "https://postlight.com/wp-content/uploads/2018/03/109TC-e1535047852633.jpg",
               "_id": "8340d0ec33270a25f2413b69"
-          },
+          }
       ],
       "_id": "5d28fd8f2eb23e001f5c356a",
       "name": "Пододеялово",
@@ -485,4 +485,4 @@ module.exports.cards = [
       },
       "createdAt": "2019-08-18T17:57:31.609Z"
   }
-];
+]

@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
-    "deploy": "gh-pages -d dist",
-    "dev": "nodemon app.js --mode development"
+    "dev": "nodemon app.js --mode development",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "Korlyakov A.M <ylet-logi@mail.ru>",
