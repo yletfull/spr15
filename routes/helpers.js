@@ -9,8 +9,9 @@ const getUsersList = (req, res) => {
 
 const getUser = (req, res) => {
   const currentUser = users.filter((user) => user._id === req.params.id);
-  if (!currentUser) { res.send({ error: 'Такого пользователя нет' }); return; }
-  res.send(currentUser);
+  console.log(currentUser);
+  if (currentUser == '') { res.send({ error: 'Такого пользователя нет' }); }
+  res.send((currentUser));
 };
 
 const getCards = (req, res) => {
