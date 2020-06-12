@@ -5,12 +5,12 @@ const express = require('express');
 const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
 const routes = require('./routes/routes');
-const { err, timeLog } = require('./routes/helpers');
+const { error, timeLog } = require('./routes/helpers');
 
 app.use(express.static(`${__dirname}/public`));
 app.use('', timeLog);
 app.use('', routes);
-app.use('', err);
+app.use('', error);
 
 // eslint-disable-next-line no-unused-vars
 const server = app.listen(PORT, () => {});

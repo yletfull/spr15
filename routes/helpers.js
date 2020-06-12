@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-underscore-dangle */
 const { users } = require('../data/users');
 const { cards } = require('../data/cards');
 
@@ -15,7 +17,7 @@ const getCards = (req, res) => {
   res.send(cards);
 };
 
-const err = (req, res, err) => {
+const error = (req, res, err) => {
   if (err) { res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }); }
 };
 
@@ -29,6 +31,6 @@ module.exports = {
   getUsersList,
   getUser,
   getCards,
-  err,
+  error,
   timeLog,
 };
