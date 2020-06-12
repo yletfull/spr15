@@ -14,4 +14,3 @@ app.use('', error);
 
 // eslint-disable-next-line no-unused-vars
 const server = app.listen(PORT, () => {});
-// server.close();
