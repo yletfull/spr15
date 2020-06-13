@@ -8,8 +8,8 @@ const getUsersList = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  const currentUser = users.filter((user) => user._id === req.params.id);
-  if (currentUser == '') { res.status(404).send({ error: 'Нет пользователя с таким id' }); return; }
+  const currentUser = users.find((user) => user._id === req.params.id);
+  if (!currentUser) { res.status(404).send({ message: 'Нет пользователя с таким id' }); return; }
   res.send((currentUser));
 };
 
