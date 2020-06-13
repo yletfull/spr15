@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const { getUser, getUsersList, getCards } = require('./helpers.js');
+const path = require('path');
+const { getUser, getUsersList, getCards } = require(path.join(__dirname, './helpers'));
 
 router.get('/users', getUsersList);
 
