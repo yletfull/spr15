@@ -2,12 +2,13 @@
 const router = require('express').Router();
 const path = require('path');
 
-const { getUser, getUsersList, getCards } = require(path.join(__dirname, './helpers'));
+const cards = require(path.join(__dirname, '../data/cards'));
 
-router.get('/users', getUsersList);
-
-router.get('/users/:id', getUser);
+const getCards = (req, res) => {
+  res.send(cards);
+};
 
 router.get('/cards', getCards);
 
 module.exports = router;
+
