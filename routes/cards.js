@@ -2,13 +2,10 @@
 const router = require('express').Router();
 const path = require('path');
 
-const cards = require(path.join(__dirname, '../data/cards'));
-
-const getCards = (req, res) => {
-  res.send(cards);
-};
+const {getCards, addCard} = require(path.join(__dirname, '../controllers/cards'))
 
 router.get('/cards', getCards);
+router.post('/cards', addCard)
 
 module.exports = router;
 

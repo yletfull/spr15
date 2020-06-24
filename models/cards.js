@@ -1,6 +1,7 @@
-const { Mongoose } = require("mongoose")
+const path = require('path');
 
 const mongoose = require('mongoose');
+
 
 const cardSchema = new mongoose.Schema({
   name:{
@@ -17,20 +18,21 @@ const cardSchema = new mongoose.Schema({
       },
       message: props => `${props.value} is not a valid url!`
     },
-    required: true,
+    required: true
   },
-  owner:{
+  owner: [{
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
     required: true,
-  },
-  likes:{
-    type: mongoose.Schema.Types.ObjectId,
-    default: {},
-  },
+  }],
+  // likes:{
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   default: {},
+  // },
   createdAt:{
     type: Date,
     default: Date.now,
   }
-})
+},{versionKey: false})
 
 module.exports = mongoose.model('card', cardSchema);

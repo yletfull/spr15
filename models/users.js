@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
       message: props => `${props.value} is not a valid url!`
     },
     required: true
-  }
-})
+  },
+},{versionKey: false} )
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('users', userSchema);
