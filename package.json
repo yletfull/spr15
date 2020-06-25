@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js --mode development"
+    "dev": "nodemon app.js --mode development",
+    "lint": "eslint ./models"
   },
   "keywords": [],
   "author": "Korlyakov A.M <ylet-logi@mail.ru>",
@@ -16,9 +17,6 @@
     "mongoose": "^5.9.20"
   },
   "devDependencies": {
-    "eslint": "^7.2.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.21.2",
     "nodemon": "^2.0.4"
   }
 }
