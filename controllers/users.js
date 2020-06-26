@@ -4,20 +4,20 @@ const users = require(path.join(__dirname, '../models/users'));
 
 const getUsersList = (req, res) => {
   users.find({})
-    .then((users) => res.send({ users }))
+    .then((users) => res.status(200).send({ users }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 const getUser = (req, res) => {
   users.findById(req.params.id)
-    .then((user) => res.send({ user }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((user) => res.status(200).send({ user }))
+    .catch(() => res.status(404).send({ message: `Пользователя с id:'${req.params.id}' не существует` }));
 };
 
 const addUser = (req, res) => {
   const { name, about, avatar } = req.body;
   users.create({ name, about, avatar })
-    .then((user) => res.send({ user }))
+    .then((user) => res.status(200).send({ user }))
     .catch((err) => res.status(500).send({ message: `${err}` }));
 };
 
@@ -29,7 +29,7 @@ const updateUser = (req, res) => {
       runValidators: true,
       upsert: true,
     })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => res.status(500).send({ message: `${err}` }));
 };
 
@@ -41,7 +41,7 @@ const updateAvatar = (req, res) => {
       runValidators: true,
       upsert: true,
     })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => res.status(500).send({ message: `${err}` }));
 };
 
