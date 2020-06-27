@@ -22,10 +22,16 @@ const addCard = (req, res) => {
 };
 
 const removeCard = (req, res) => {
-  cards.findByIdAndRemove(req.params.cardId)
+  cards.findById(req.params.cardId)
     .then((card) => {
       if (card) {
-        res.status(200).send({ card });
+        if (card.owner == req.user._id) {
+          cards.findByIdAndRemove(req.params.cardId)
+            .then(res.status(200).send({ card }))
+            .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+        } else {
+          res.status(404).send({ message: 'Нет доступа' });
+        }
       } else {
         res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
       }

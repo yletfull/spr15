@@ -49,14 +49,22 @@ const updateUser = (req, res) => {
 
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  users.findByIdAndUpdate(req.user._id, { avatar },
-    {
-      new: true,
-      runValidators: true,
-      upsert: true,
+  users.findById(req.user._id)
+    .then((user) => {
+      if (user) {
+        users.findByIdAndUpdate(req.user._id, { avatar },
+          {
+            new: true,
+            runValidators: true,
+            upsert: true,
+          })
+          .then((user) => res.status(200).send({ data: user }))
+          .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+      } else {
+        res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
+      }
     })
-    .then((user) => res.status(200).send({ data: user }))
-    .catch((err) => res.status(500).send({ message: `${err}` }));
+    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 module.exports = {
