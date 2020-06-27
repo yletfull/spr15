@@ -23,8 +23,14 @@ const addCard = (req, res) => {
 
 const removeCard = (req, res) => {
   cards.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.status(200).send({ card }))
-    .catch(() => res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` }));
+    .then((card) => {
+      if (card) {
+        res.status(200).send({ card });
+      } else {
+        res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
+      }
+    })
+    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 const likeCard = (req, res) => {
@@ -33,8 +39,14 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then(() => res.status(200).send({ message: `Liked ${req.params.cardId}` }))
-    .catch(() => res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` }));
+    .then((card) => {
+      if (card) {
+        res.status(200).send({ message: `Liked ${req.params.cardId}` });
+      } else {
+        res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
+      }
+    })
+    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 const dislikedCard = (req, res) => {

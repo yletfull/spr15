@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const cards = require(path.join(__dirname, './routes/cards'));
 const users = require(path.join(__dirname, './routes/users'));
@@ -15,7 +15,7 @@ const app = express();
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100
+  max: 100,
 });
 
 app.use(helmet());
@@ -23,7 +23,7 @@ app.use(limiter);
 app.use(express.json());
 app.use((req, res, next) => {
   req.user = {
-    _id: '5ef60b7c9215cb244c174f2d',
+    _id: '5ef60b7c9215cb244c174f2f',
   };
   next();
 });
