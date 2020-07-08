@@ -1,4 +1,6 @@
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -23,6 +25,40 @@ const userSchema = new mongoose.Schema({
     },
     required: true,
   },
+  email: {
+    type: String,
+    validate: {
+      validator(v) {
+        return /^([1-9a-zA-Z]+([-_]?[1-9a-zA-Z/d]+)+|[1-9a-zA-Z])@([1-9a-zA-Z/d]+(-?[1-9a-zA-Z/d]+)|[1-9a-zA-Z])\.[a-z]{2,7}$/.test(v);
+      },
+      message: (props) => `${props.value} is not a valid e-mail!`,
+    },
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
 }, { versionKey: false });
+
+userSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email }).select('+password')
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            return Promise.reject(new Error('Неправильные почта или пароль'));
+          }
+
+          return user;
+        });
+    });
+};
 
 module.exports = mongoose.model('users', userSchema);

@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 const path = require('path');
 
 const cards = require(path.join(__dirname, '../models/cards'));
@@ -30,7 +31,7 @@ const removeCard = (req, res) => {
             .then(res.status(200).send({ card }))
             .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
         } else {
-          res.status(404).send({ message: 'Нет доступа' });
+          res.status(403).send({ message: 'Нет доступа' });
         }
       } else {
         res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });

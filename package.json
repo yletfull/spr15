@@ -12,6 +12,7 @@
   "author": "Korlyakov A.M <ylet-logi@mail.ru>",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "eslint": "^7.3.1",
     "eslint-config-airbnb-base": "^14.2.0",
@@ -19,6 +20,7 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.1.3",
     "helmet": "^3.23.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.20"
   },
   "devDependencies": {

@@ -1,4 +1,6 @@
 const path = require('path');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const users = require(path.join(__dirname, '../models/users'));
 
@@ -20,11 +22,19 @@ const getUser = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
-const addUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  users.create({ name, about, avatar })
-    .then((user) => res.status(200).send({ user }))
-    .catch((err) => res.status(500).send({ message: `${err}` }));
+const register = (req, res) => {
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      users.create({
+        name, about, avatar, email, password: hash,
+      })
+        .then((user) => res.status(200).send({ user }))
+        .catch((err) => res.status(500).send({ message: `${err}` }));
+    })
+    .catch((err) => res.status(400).send(err));
 };
 
 const updateUser = (req, res) => {
@@ -67,10 +77,23 @@ const updateAvatar = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+  users.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.status(200).send({ token });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
+
 module.exports = {
   getUsersList,
   getUser,
-  addUser,
+  register,
   updateUser,
   updateAvatar,
+  login,
 };
