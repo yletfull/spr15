@@ -1,6 +1,6 @@
-/* eslint-disable func-names */
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return /^(https?:\/{2})?(www\.)?(((([a-zA-Z0-9]+[-_.]?[a-zA-Z0-9]+|[a-z]{0,})+(?<=[a-z])\.[a-z]{2,10})(:([1-5][1-9]{4}|[6][0-5][0-5][0-3][0-5]|[1-9][0-9]{0,3}))?(\/[a-zA-Z0-9#.\/?_-]*\/?)*)|((([0-1][0-9]{2}|[2][0-5]{2}|[0-9]){0,2}(\.|:)){3}(([0-1][0-9]{2}|[2][0-5]{2}|[0-9]){0,2}(:([1-5][1-9]{4}|[6][0-5][0-5][0-3][0-5]|[1-9][0-9]{0,3}))?)(\/[a-zA-Z0-9#.\/?_-]+\/?)*)\/?#?)+$/.test(v);
+        return validator.isURL(v);
       },
       message: (props) => `${props.value} is not a valid url!`,
     },
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return /^([1-9a-zA-Z]+([-_]?[1-9a-zA-Z/d]+)+|[1-9a-zA-Z])@([1-9a-zA-Z/d]+(-?[1-9a-zA-Z/d]+)|[1-9a-zA-Z])\.[a-z]{2,7}$/.test(v);
+        return validator.isEmail(v);
       },
       message: (props) => `${props.value} is not a valid e-mail!`,
     },
@@ -43,22 +43,24 @@ const userSchema = new mongoose.Schema({
   },
 }, { versionKey: false });
 
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).select('+password')
-    .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-
-      return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
-          }
-
-          return user;
-        });
-    });
+  if (password) {
+    return this.findOne({ email }).select('+password')
+      .then((user) => {
+        if (!user) {
+          return Promise.reject(new Error('Неправильная почта или пароль'));
+        }
+        return bcrypt.compare(password, user.password)
+          .then((matched) => {
+            if (!matched) {
+              return Promise.reject(new Error('Неправильная почта или пароль'));
+            }
+            return user;
+          });
+      });
+  }
+  return Promise.reject(new Error('Отсутствует пароль'));
 };
 
 module.exports = mongoose.model('users', userSchema);

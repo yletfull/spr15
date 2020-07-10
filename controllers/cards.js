@@ -1,4 +1,3 @@
-/* eslint-disable eqeqeq */
 const path = require('path');
 
 const cards = require(path.join(__dirname, '../models/cards'));
@@ -19,17 +18,21 @@ const addCard = (req, res) => {
     name, link, owner, likes, createdAt,
   })
     .then((card) => res.status(200).send({ card }))
-    .catch((err) => res.status(500).send({ message: `${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') { res.status(400).send({ message: `${err}` }); }
+      res.status(500).send({ message: `${err}` });
+    });
 };
 
 const removeCard = (req, res) => {
   cards.findById(req.params.cardId)
     .then((card) => {
       if (card) {
+        // eslint-disable-next-line eqeqeq
         if (card.owner == req.user._id) {
           cards.findByIdAndRemove(req.params.cardId)
             .then(res.status(200).send({ card }))
-            .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+            .catch((err) => res.status(500).send({ message: err.message }));
         } else {
           res.status(403).send({ message: 'Нет доступа' });
         }
@@ -37,7 +40,12 @@ const removeCard = (req, res) => {
         res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
       }
     })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный id' });
+      }
+      res.status(500).send({ message: err.message });
+    });
 };
 
 const likeCard = (req, res) => {
@@ -48,12 +56,17 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (card) {
-        res.status(200).send({ message: `Liked ${req.params.cardId}` });
+        res.status(200).send(card);
       } else {
         res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
       }
     })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный id' });
+      }
+      res.status(500).send({ message: err.message });
+    });
 };
 
 const dislikedCard = (req, res) => {
@@ -62,8 +75,19 @@ const dislikedCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then(() => res.status(200).send({ message: `Disliked ${req.params.cardId}` }))
-    .catch(() => res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` }));
+    .then((card) => {
+      if (card) {
+        res.status(200).send(card);
+      } else {
+        res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный id' });
+      }
+      res.status(500).send({ message: err.message });
+    });
 };
 
 module.exports = {

@@ -7,7 +7,7 @@ const users = require(path.join(__dirname, '../models/users'));
 const getUsersList = (req, res) => {
   users.find({})
     .then((users) => res.status(200).send({ users }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const getUser = (req, res) => {
@@ -19,9 +19,13 @@ const getUser = (req, res) => {
         res.status(404).send({ message: `Пользователя с id:'${req.params.id}' не существует` });
       }
     })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный id' });
+      }
+      res.status(500).send({ message: err.message });
+    });
 };
-
 const register = (req, res) => {
   const {
     name, about, avatar, email, password,
@@ -31,10 +35,17 @@ const register = (req, res) => {
       users.create({
         name, about, avatar, email, password: hash,
       })
-        .then((user) => res.status(200).send({ user }))
-        .catch((err) => res.status(500).send({ message: `${err}` }));
+        .then(() => res.status(200).send({
+          name, about, avatar, email,
+        }))
+        .catch((err) => {
+          if (err.name === 'ValidationError') { res.status(400).send({ message: `${err}` }); }
+          // eslint-disable-next-line eqeqeq
+          if (err.name === 'MongoError' && err.code == '11000') { res.status(409).send({ message: 'Email уже используется' }); }
+          res.status(500).send({ message: `${err}` });
+        });
     })
-    .catch((err) => res.status(400).send(err));
+    .catch((err) => { res.status(400).send({ message: err.message }); });
 };
 
 const updateUser = (req, res) => {
@@ -49,12 +60,22 @@ const updateUser = (req, res) => {
             upsert: true,
           })
           .then((user) => res.status(200).send({ data: user }))
-          .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+          .catch((err) => {
+            if (err.name === 'ValidationError') {
+              res.status(400).send({ message: err.message });
+            }
+            res.status(500).send({ message: err.message });
+          });
       } else {
         res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
       }
     })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный id' });
+      }
+      res.status(500).send({ message: err.message });
+    });
 };
 
 const updateAvatar = (req, res) => {
@@ -69,12 +90,17 @@ const updateAvatar = (req, res) => {
             upsert: true,
           })
           .then((user) => res.status(200).send({ data: user }))
-          .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+          .catch((err) => {
+            if (err.name === 'ValidationError') {
+              res.status(400).send({ message: err.message });
+            }
+            res.status(500).send({ message: err.message });
+          });
       } else {
         res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
       }
     })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const login = (req, res) => {
