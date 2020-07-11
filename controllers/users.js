@@ -21,7 +21,7 @@ const getUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id' });
+        return res.status(400).send({ message: 'Некорректный id' });
       }
       res.status(500).send({ message: err.message });
     });
@@ -39,9 +39,12 @@ const register = (req, res) => {
           name, about, avatar, email,
         }))
         .catch((err) => {
-          if (err.name === 'ValidationError') { res.status(400).send({ message: `${err}` }); }
-          // eslint-disable-next-line eqeqeq
-          if (err.name === 'MongoError' && err.code == '11000') { res.status(409).send({ message: 'Email уже используется' }); }
+          if (err.name === 'ValidationError') {
+            return res.status(400).send({ message: `${err}` });
+          }
+          if (err.name === 'MongoError' && err.code === 11000) {
+            return res.status(409).send({ message: 'Email уже используется' });
+          }
           res.status(500).send({ message: `${err}` });
         });
     })
@@ -62,7 +65,7 @@ const updateUser = (req, res) => {
           .then((user) => res.status(200).send({ data: user }))
           .catch((err) => {
             if (err.name === 'ValidationError') {
-              res.status(400).send({ message: err.message });
+              return res.status(400).send({ message: err.message });
             }
             res.status(500).send({ message: err.message });
           });
@@ -72,7 +75,7 @@ const updateUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id' });
+        return res.status(400).send({ message: 'Некорректный id' });
       }
       res.status(500).send({ message: err.message });
     });
@@ -92,7 +95,7 @@ const updateAvatar = (req, res) => {
           .then((user) => res.status(200).send({ data: user }))
           .catch((err) => {
             if (err.name === 'ValidationError') {
-              res.status(400).send({ message: err.message });
+              return res.status(400).send({ message: err.message });
             }
             res.status(500).send({ message: err.message });
           });

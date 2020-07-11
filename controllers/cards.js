@@ -19,7 +19,9 @@ const addCard = (req, res) => {
   })
     .then((card) => res.status(200).send({ card }))
     .catch((err) => {
-      if (err.name === 'ValidationError') { res.status(400).send({ message: `${err}` }); }
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: `${err}` });
+      }
       res.status(500).send({ message: `${err}` });
     });
 };
@@ -42,7 +44,7 @@ const removeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id' });
+        return res.status(400).send({ message: 'Некорректный id' });
       }
       res.status(500).send({ message: err.message });
     });
@@ -63,7 +65,7 @@ const likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id' });
+        return res.status(400).send({ message: 'Некорректный id' });
       }
       res.status(500).send({ message: err.message });
     });
@@ -84,7 +86,7 @@ const dislikedCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный id' });
+        return res.status(400).send({ message: 'Некорректный id' });
       }
       res.status(500).send({ message: err.message });
     });

@@ -1,6 +1,6 @@
 {
   "name": "sp12",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Yandex Praktikum 12spr. Creating web-server with Express",
   "main": "app.js",
   "scripts": {
