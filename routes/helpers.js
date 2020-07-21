@@ -14,6 +14,7 @@ const timeLog = (req, res, next) => {
 const mongooseConnection = (data) => {
   const { servUrl } = data;
   mongoose.connect(servUrl, {
+    useUnifiedTopology: true,
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
