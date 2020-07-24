@@ -8,7 +8,7 @@ const { register, login } = require(path.join(__dirname, './controllers/users'))
 const cards = require(path.join(__dirname, './routes/cards'));
 const users = require(path.join(__dirname, './routes/users'));
 
-const { error, timeLog, mongooseConnection } = require(path.join(__dirname, '/routes/helpers.js'));
+const { error, timeLog, mongooseConnection, errorProcessor } = require(path.join(__dirname, '/routes/helpers.js'));
 
 mongooseConnection({ servUrl: 'mongodb://localhost:27017/mestodb' });
 
@@ -29,6 +29,7 @@ app.post('/signup', register);
 app.use('', auth);
 app.use('', cards);
 app.use('', users);
+app.use('', errorProcessor);
 app.use('', error);
 
 app.listen(PORT, () => {});

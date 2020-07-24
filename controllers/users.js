@@ -1,32 +1,46 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-param-reassign */
 const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const users = require(path.join(__dirname, '../models/users'));
 
-const getUsersList = (req, res) => {
+const getUsersList = (req, res, next) => {
   users.find({})
     .then((users) => res.status(200).send({ users }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      err.statusCode = 500;
+      next(err);
+      // res.status(500).send({ message: err.message }));
+    });
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   users.findById(req.params.id)
     .then((user) => {
       if (user) {
         res.status(200).send({ user });
       } else {
-        res.status(404).send({ message: `Пользователя с id:'${req.params.id}' не существует` });
+        err = new Error(`Пользователя с id:'${req.params.id}' не существует`);
+        err.statusCode = 404;
+        next(err);
+        // res.status(404).send({ message: `Пользователя с id:'${req.params.id}' не существует` });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400).send({ message: 'Некорректный id' });
+        err = new Error('Некорректный id');
+        err.statusCode = 400;
+        next(err);
+        // return res.status(400).send({ message: 'Некорректный id' });
       }
-      res.status(500).send({ message: err.message });
+      err.statusCode = 500;
+      next(err);
+      // res.status(500).send({ message: err.message });
     });
 };
-const register = (req, res) => {
+const register = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -40,18 +54,29 @@ const register = (req, res) => {
         }))
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            return res.status(400).send({ message: `${err}` });
+            err.statusCode = 400;
+            next(err);
+            // return res.status(400).send({ message: `${err}` });
           }
           if (err.name === 'MongoError' && err.code === 11000) {
-            return res.status(409).send({ message: 'Email уже используется' });
+            err = new Error('Email уже используется');
+            err.statusCode = 409;
+            next(err);
+            // return res.status(409).send({ message: 'Email уже используется' });
           }
-          res.status(500).send({ message: `${err}` });
+          err.statusCode = 500;
+          next(err);
+          // res.status(500).send({ message: `${err}` });
         });
     })
-    .catch((err) => { res.status(400).send({ message: err.message }); });
+    .catch((err) => {
+      err.statusCode = 400;
+      next(err);
+      //  res.status(400).send({ message: err.message });
+    });
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   users.findById(req.user._id)
     .then((user) => {
@@ -65,23 +90,35 @@ const updateUser = (req, res) => {
           .then((user) => res.status(200).send({ data: user }))
           .catch((err) => {
             if (err.name === 'ValidationError') {
-              return res.status(400).send({ message: err.message });
+              err.statusCode = 400;
+              next(err);
+              // return res.status(400).send({ message: err.message });
             }
-            res.status(500).send({ message: err.message });
+            err.statusCode = 500;
+            next(err);
+            // res.status(500).send({ message: err.message });
           });
       } else {
-        res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
+        err = new Error(`Пользователя с id:'${req.user._id}' не существует`);
+        err.statusCode = 404;
+        next(err);
+        // res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400).send({ message: 'Некорректный id' });
+        err = new Error('Некорректный id');
+        err.statusCode = 400;
+        next(err);
+        // return res.status(400).send({ message: 'Некорректный id' });
       }
-      res.status(500).send({ message: err.message });
+      err.statusCode = 500;
+      next(err);
+      // res.status(500).send({ message: err.message });
     });
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   users.findById(req.user._id)
     .then((user) => {
@@ -95,18 +132,29 @@ const updateAvatar = (req, res) => {
           .then((user) => res.status(200).send({ data: user }))
           .catch((err) => {
             if (err.name === 'ValidationError') {
-              return res.status(400).send({ message: err.message });
+              err.statusCode = 400;
+              next(err);
+              // return res.status(400).send({ message: err.message });
             }
-            res.status(500).send({ message: err.message });
+            err.statusCode = 500;
+            next(err);
+            // res.status(500).send({ message: err.message });
           });
       } else {
-        res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
+        err = new Error(`Пользователя с id:'${req.user._id}' не существует`);
+        err.statusCode = 404;
+        next(err);
+        // res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
       }
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      err.statusCode = 500;
+      next(err);
+      // res.status(500).send({ message: err.message }));
+    });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   users.findUserByCredentials(email, password)
     .then((user) => {
@@ -114,7 +162,9 @@ const login = (req, res) => {
       res.status(200).send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message });
+      err.statusCode = 401;
+      next(err);
+      // res.status(401).send({ message: err.message });
     });
 };
 
