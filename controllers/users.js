@@ -4,6 +4,8 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const users = require(path.join(__dirname, '../models/users'));
 
 const getUsersList = (req, res, next) => {
@@ -12,7 +14,6 @@ const getUsersList = (req, res, next) => {
     .catch((err) => {
       err.statusCode = 500;
       next(err);
-      // res.status(500).send({ message: err.message }));
     });
 };
 
@@ -25,7 +26,6 @@ const getUser = (req, res, next) => {
         err = new Error(`Пользователя с id:'${req.params.id}' не существует`);
         err.statusCode = 404;
         next(err);
-        // res.status(404).send({ message: `Пользователя с id:'${req.params.id}' не существует` });
       }
     })
     .catch((err) => {
@@ -33,11 +33,9 @@ const getUser = (req, res, next) => {
         err = new Error('Некорректный id');
         err.statusCode = 400;
         next(err);
-        // return res.status(400).send({ message: 'Некорректный id' });
       }
       err.statusCode = 500;
       next(err);
-      // res.status(500).send({ message: err.message });
     });
 };
 const register = (req, res, next) => {
@@ -56,23 +54,19 @@ const register = (req, res, next) => {
           if (err.name === 'ValidationError') {
             err.statusCode = 400;
             next(err);
-            // return res.status(400).send({ message: `${err}` });
           }
           if (err.name === 'MongoError' && err.code === 11000) {
             err = new Error('Email уже используется');
             err.statusCode = 409;
             next(err);
-            // return res.status(409).send({ message: 'Email уже используется' });
           }
           err.statusCode = 500;
           next(err);
-          // res.status(500).send({ message: `${err}` });
         });
     })
     .catch((err) => {
       err.statusCode = 400;
       next(err);
-      //  res.status(400).send({ message: err.message });
     });
 };
 
@@ -92,17 +86,14 @@ const updateUser = (req, res, next) => {
             if (err.name === 'ValidationError') {
               err.statusCode = 400;
               next(err);
-              // return res.status(400).send({ message: err.message });
             }
             err.statusCode = 500;
             next(err);
-            // res.status(500).send({ message: err.message });
           });
       } else {
         err = new Error(`Пользователя с id:'${req.user._id}' не существует`);
         err.statusCode = 404;
         next(err);
-        // res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
       }
     })
     .catch((err) => {
@@ -110,11 +101,9 @@ const updateUser = (req, res, next) => {
         err = new Error('Некорректный id');
         err.statusCode = 400;
         next(err);
-        // return res.status(400).send({ message: 'Некорректный id' });
       }
       err.statusCode = 500;
       next(err);
-      // res.status(500).send({ message: err.message });
     });
 };
 
@@ -134,23 +123,19 @@ const updateAvatar = (req, res, next) => {
             if (err.name === 'ValidationError') {
               err.statusCode = 400;
               next(err);
-              // return res.status(400).send({ message: err.message });
             }
             err.statusCode = 500;
             next(err);
-            // res.status(500).send({ message: err.message });
           });
       } else {
         err = new Error(`Пользователя с id:'${req.user._id}' не существует`);
         err.statusCode = 404;
         next(err);
-        // res.status(404).send({ message: `Пользователя с id:'${req.user._id}' не существует` });
       }
     })
     .catch((err) => {
       err.statusCode = 500;
       next(err);
-      // res.status(500).send({ message: err.message }));
     });
 };
 
@@ -158,13 +143,13 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   users.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.status(200).send({ token });
     })
     .catch((err) => {
       err.statusCode = 401;
       next(err);
-      // res.status(401).send({ message: err.message });
     });
 };
 

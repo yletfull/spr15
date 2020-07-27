@@ -12,7 +12,6 @@ const getCards = (req, res, next) => {
       err.statusCode = 500;
       next(err);
     });
-  // res.status(500).send({ message: `${err}` }));
 };
 
 const addCard = (req, res, next) => {
@@ -28,11 +27,9 @@ const addCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         err.statusCode = 400;
         next(err);
-        // return res.status(400).send({ message: `${err}` });
       }
       err.statusCode = 500;
       next(err);
-      // res.status(500).send({ message: `${err}` });
     });
 };
 
@@ -47,19 +44,16 @@ const removeCard = (req, res, next) => {
             .catch((err) => {
               err.statusCode = 500;
               next(err);
-              // res.status(500).send({ message: err.message }));
             });
         } else {
           err = new Error('Нет доступа');
           err.statusCode = 403;
           next(err);
-          // res.status(403).send({ message: 'Нет доступа' });
         }
       } else {
         err = new Error(`Карточки с id:'${req.params.cardId}' не существует`);
         err.statusCode = 404;
         next(err);
-        // res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
       }
     })
     .catch((err) => {
@@ -67,11 +61,9 @@ const removeCard = (req, res, next) => {
         err = new Error('Некорректный id');
         err.statusCode = 400;
         next(err);
-        // return res.status(400).send({ message: 'Некорректный id' });
       }
       err.statusCode = 500;
       next(err);
-      // res.status(500).send({ message: err.message });
     });
 };
 
@@ -88,7 +80,6 @@ const likeCard = (req, res, next) => {
         err = new Error(`Карточки с id:'${req.params.cardId}' не существует`);
         err.statusCode = 404;
         next(err);
-        // res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
       }
     })
     .catch((err) => {
@@ -96,11 +87,9 @@ const likeCard = (req, res, next) => {
         err = new Error('Некорректный id');
         err.statusCode = 400;
         next(err);
-        // return res.status(400).send({ message: 'Некорректный id' });
       }
       err.statusCode = 500;
       next(err);
-      // res.status(500).send({ message: err.message });
     });
 };
 
@@ -117,7 +106,6 @@ const dislikedCard = (req, res, next) => {
         err = new Error(`Карточки с id:'${req.params.cardId}' не существует`);
         err.statusCode = 400;
         next(err);
-        // res.status(404).send({ message: `Карточки с id:'${req.params.cardId}' не существует` });
       }
     })
     .catch((err) => {
@@ -125,11 +113,9 @@ const dislikedCard = (req, res, next) => {
         err = new Error('Некорректный id');
         err.statusCode = 400;
         next(err);
-        // return res.status(400).send({ message: 'Некорректный id' });
       }
       err.statusCode = 500;
       next(err);
-      // res.status(500).send({ message: err.message });
     });
 };
 
