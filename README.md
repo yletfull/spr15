@@ -1,8 +1,8 @@
-# 1. Yandex praktikum sprint 14
+# 1. Yandex praktikum sprint 15
 Andrey Korlyakov  
 
 ## 2. Актуальная версия  
-V 1.2.0
+V 1.0.0
 
 ## 3. Описание спринта  
 Создание сервера с помощью фреймворка Express. Работа с Eslint. Работа с NoSQL базой данных MongoDB. Реализация взаимодействия базы данных и сервера посредством mongoose. Реализация авторизации и регистрации. 
@@ -65,3 +65,6 @@ V 1.2.0
 - `jsonwebtoken`: 8.5.1
 - `express-rate-limit`: 5.1.3
 - `validator`: 13.1.1
+- `celebrate`: "12.1.2",
+- `dotenv`: "8.2.0",
+- `winston`: "3.3.3"
