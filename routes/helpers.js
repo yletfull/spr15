@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 
-const error = (req, res, err) => {
-  if (err) { res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }); }
-};
-
 const errorProcessor = (err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'Ошибка сервера' : message });
-  next(err);
+  if (!err) { next(); }
+};
+
+const resourseError = (req, res) => {
+  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 };
 
 const timeLog = (req, res, next) => {
@@ -17,7 +17,7 @@ const timeLog = (req, res, next) => {
 };
 
 module.exports = {
-  error,
+  resourseError,
   timeLog,
   errorProcessor,
 };

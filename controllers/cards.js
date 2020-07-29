@@ -4,6 +4,9 @@ const path = require('path');
 
 const cards = require(path.join(__dirname, '../models/cards'));
 
+const { NotFoundError } = require(path.join(__dirname, '../errors/NotFoundError'));
+const { NoAccess } = require(path.join(__dirname, '../errors/NoAccess'));
+
 const getCards = (req, res, next) => {
   cards.find({})
     .populate('owner')
@@ -46,13 +49,11 @@ const removeCard = (req, res, next) => {
               next(err);
             });
         } else {
-          err = new Error('Нет доступа');
-          err.statusCode = 403;
+          err = new NoAccess('Нет доступа');
           next(err);
         }
       } else {
-        err = new Error(`Карточки с id:'${req.params.cardId}' не существует`);
-        err.statusCode = 404;
+        err = new NotFoundError(`Карточки с id:'${req.params.cardId}' не существует`);
         next(err);
       }
     })
@@ -77,8 +78,7 @@ const likeCard = (req, res, next) => {
       if (card) {
         res.status(200).send(card);
       } else {
-        err = new Error(`Карточки с id:'${req.params.cardId}' не существует`);
-        err.statusCode = 404;
+        err = new NotFoundError(`Карточки с id:'${req.params.cardId}' не существует`);
         next(err);
       }
     })
@@ -86,7 +86,7 @@ const likeCard = (req, res, next) => {
       if (err.name === 'CastError') {
         err = new Error('Некорректный id');
         err.statusCode = 400;
-        next(err);
+        return next(err);
       }
       err.statusCode = 500;
       next(err);
@@ -112,7 +112,7 @@ const dislikedCard = (req, res, next) => {
       if (err.name === 'CastError') {
         err = new Error('Некорректный id');
         err.statusCode = 400;
-        next(err);
+        return next(err);
       }
       err.statusCode = 500;
       next(err);

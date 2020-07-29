@@ -5,8 +5,8 @@ const path = require('path');
 const { PORT = 3000 } = process.env;
 const { app } = require(path.join(__dirname, './app'));
 
-const mongooseConnection = (data) => {
-  const { servUrl } = data;
+const mongooseConnection = () => {
+  const servUrl = 'mongodb://localhost:27017/mestodb';
   mongoose.connect(servUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
@@ -21,5 +21,5 @@ const mongooseConnection = (data) => {
   });
 };
 
-mongooseConnection({ servUrl: 'mongodb://localhost:27017/mestodb' });
+mongooseConnection();
 app.listen(PORT, () => {});

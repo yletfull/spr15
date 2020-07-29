@@ -75,6 +75,7 @@ V 1.0.0
 - https
 ## 4. Установка  
 `git clone https://github.com/yletfull/spr15 spr15`
+`npm i`
 
 ## 5. Подключенные библиотеки
 - `body-parser`: 1.19.0,

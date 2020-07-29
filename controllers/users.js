@@ -4,6 +4,8 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const { NotFoundError } = require(path.join(__dirname, '../errors/NotFoundError'));
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const users = require(path.join(__dirname, '../models/users'));
@@ -23,8 +25,7 @@ const getUser = (req, res, next) => {
       if (user) {
         res.status(200).send({ user });
       } else {
-        err = new Error(`Пользователя с id:'${req.params.id}' не существует`);
-        err.statusCode = 404;
+        err = new NotFoundError(`Пользователя с id:'${req.params.id}' не существует`);
         next(err);
       }
     })
@@ -91,8 +92,7 @@ const updateUser = (req, res, next) => {
             next(err);
           });
       } else {
-        err = new Error(`Пользователя с id:'${req.user._id}' не существует`);
-        err.statusCode = 404;
+        err = new NotFoundError(`Пользователя с id:'${req.user._id}' не существует`);
         next(err);
       }
     })
@@ -128,8 +128,7 @@ const updateAvatar = (req, res, next) => {
             next(err);
           });
       } else {
-        err = new Error(`Пользователя с id:'${req.user._id}' не существует`);
-        err.statusCode = 404;
+        err = new NotFoundError(`Пользователя с id:'${req.user._id}' не существует`);
         next(err);
       }
     })

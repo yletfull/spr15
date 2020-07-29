@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "lint": "eslint ./",
-    "test": "jest"
+    "lint": "eslint ./"
   },
   "keywords": [],
   "author": "Korlyakov A.M <ylet-logi@mail.ru>",

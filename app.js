@@ -13,7 +13,7 @@ const cards = require(path.join(__dirname, './routes/cards'));
 const users = require(path.join(__dirname, './routes/users'));
 
 const {
-  error, timeLog, errorProcessor,
+  resourseError, timeLog, errorProcessor,
 } = require(path.join(__dirname, '/routes/helpers.js'));
 
 const limiter = rateLimit({
@@ -60,6 +60,5 @@ app.use('', users);
 app.use(errorLogger);
 app.use(errors());
 app.use('', errorProcessor);
-app.use('', error);
-
+app.use('', resourseError);
 module.exports = { app };
