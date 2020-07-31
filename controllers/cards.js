@@ -6,6 +6,7 @@ const cards = require(path.join(__dirname, '../models/cards'));
 
 const { NotFoundError } = require(path.join(__dirname, '../errors/NotFoundError'));
 const { NoAccess } = require(path.join(__dirname, '../errors/NoAccess'));
+const { BadRequest } = require(path.join(__dirname, '../errors/BadRequest'));
 
 const getCards = (req, res, next) => {
   cards.find({})
@@ -59,9 +60,7 @@ const removeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        err = new Error('Некорректный id');
-        err.statusCode = 400;
-        return next(err);
+        return next(new BadRequest('Некорректный id'));
       }
       err.statusCode = 500;
       next(err);
@@ -84,9 +83,7 @@ const likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        err = new Error('Некорректный id');
-        err.statusCode = 400;
-        return next(err);
+        return next(new BadRequest('Некорректный id'));
       }
       err.statusCode = 500;
       next(err);
@@ -109,9 +106,7 @@ const dislikedCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        err = new Error('Некорректный id');
-        err.statusCode = 400;
-        return next(err);
+        return next(new BadRequest('Некорректный id'));
       }
       err.statusCode = 500;
       next(err);

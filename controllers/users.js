@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const { NotFoundError } = require(path.join(__dirname, '../errors/NotFoundError'));
+const { BadRequest } = require(path.join(__dirname, '../errors/BadRequest'));
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -31,9 +32,7 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        err = new Error('Некорректный id');
-        err.statusCode = 400;
-        return next(err);
+        return next(new BadRequest('Некорректный id'));
       }
       err.statusCode = 500;
       next(err);
@@ -98,9 +97,7 @@ const updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        err = new Error('Некорректный id');
-        err.statusCode = 400;
-        return next(err);
+        return next(new BadRequest('Некорректный id'));
       }
       err.statusCode = 500;
       next(err);
