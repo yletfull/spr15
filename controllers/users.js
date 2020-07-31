@@ -33,7 +33,7 @@ const getUser = (req, res, next) => {
       if (err.name === 'CastError') {
         err = new Error('Некорректный id');
         err.statusCode = 400;
-        next(err);
+        return next(err);
       }
       err.statusCode = 500;
       next(err);
@@ -54,12 +54,12 @@ const register = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'ValidationError') {
             err.statusCode = 400;
-            next(err);
+            return next(err);
           }
           if (err.name === 'MongoError' && err.code === 11000) {
             err = new Error('Email уже используется');
             err.statusCode = 409;
-            next(err);
+            return next(err);
           }
           err.statusCode = 500;
           next(err);
@@ -86,7 +86,7 @@ const updateUser = (req, res, next) => {
           .catch((err) => {
             if (err.name === 'ValidationError') {
               err.statusCode = 400;
-              next(err);
+              return next(err);
             }
             err.statusCode = 500;
             next(err);
@@ -100,7 +100,7 @@ const updateUser = (req, res, next) => {
       if (err.name === 'CastError') {
         err = new Error('Некорректный id');
         err.statusCode = 400;
-        next(err);
+        return next(err);
       }
       err.statusCode = 500;
       next(err);
