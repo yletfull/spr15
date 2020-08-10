@@ -59,6 +59,6 @@ app.use('', cards);
 app.use('', users);
 app.use(errorLogger);
 app.use(errors());
-app.use('', errorProcessor);
 app.use('', resourseError);
+app.use('', errorProcessor);
 module.exports = { app };

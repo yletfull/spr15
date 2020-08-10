@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const { NotFoundError } = require(path.join(__dirname, '../errors/NotFoundError'));
+const { BadRequest } = require(path.join(__dirname, '../errors/BadRequest'));
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -31,9 +32,7 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        err = new Error('Некорректный id');
-        err.statusCode = 400;
-        next(err);
+        return next(new BadRequest('Некорректный id'));
       }
       err.statusCode = 500;
       next(err);
@@ -54,12 +53,12 @@ const register = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'ValidationError') {
             err.statusCode = 400;
-            next(err);
+            return next(err);
           }
           if (err.name === 'MongoError' && err.code === 11000) {
             err = new Error('Email уже используется');
             err.statusCode = 409;
-            next(err);
+            return next(err);
           }
           err.statusCode = 500;
           next(err);
@@ -86,7 +85,7 @@ const updateUser = (req, res, next) => {
           .catch((err) => {
             if (err.name === 'ValidationError') {
               err.statusCode = 400;
-              next(err);
+              return next(err);
             }
             err.statusCode = 500;
             next(err);
@@ -98,9 +97,7 @@ const updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        err = new Error('Некорректный id');
-        err.statusCode = 400;
-        next(err);
+        return next(new BadRequest('Некорректный id'));
       }
       err.statusCode = 500;
       next(err);
