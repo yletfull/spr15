@@ -95,5 +95,4 @@ V 1.0.0
 - `winston`: "3.3.3"
 
 ## 6. Ссылки
-www.api.mesto-project.gq  
-www.mesto-project.gq
+https://api.mesto-project.gq/
