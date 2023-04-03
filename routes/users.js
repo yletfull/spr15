@@ -3,7 +3,7 @@ const path = require('path');
 const { celebrate, Joi } = require('celebrate');
 
 const {
-  getUsersList, getUser, updateUser, updateAvatar,
+  getUsersList, getUser, updateUser, updateAvatar, checkPay
 } = require(path.join(__dirname, '../controllers/users'));
 
 router.get('/users', getUsersList);
@@ -27,5 +27,12 @@ router.patch('/users/me/avatar', celebrate({
     avatar: Joi.string().required().pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/),
   }),
 }), updateAvatar);
+
+router.get('/pay', celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().hex().required().min(24)
+      .max(24),
+  }),
+}), checkPay)
 
 module.exports = router;

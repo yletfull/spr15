@@ -57,6 +57,7 @@ app.use('',
   auth);
 app.use('', cards);
 app.use('', users);
+app.use('/static', express.static('public'))
 app.use(errorLogger);
 app.use(errors());
 app.use('', resourseError);
